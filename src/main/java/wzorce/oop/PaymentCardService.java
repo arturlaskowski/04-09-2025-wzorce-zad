@@ -22,48 +22,25 @@ class PaymentCardService {
     @Transactional
     public void activateCard(Long cardId) {
         var card = findCardByIdOrThrow(cardId);
-        if (card.getStatus() == CardStatus.ACTIVE) {
-            throw new CardOperationException("Card is already active");
-        }
-        card.setStatus(CardStatus.ACTIVE);
+        card.activate();
     }
 
     @Transactional
     public void blockCard(Long cardId) {
         var card = findCardByIdOrThrow(cardId);
-        if (card.getStatus() != CardStatus.ACTIVE) {
-            throw new CardOperationException("Card cannot be blocked unless it is active");
-        }
-        card.setStatus(CardStatus.BLOCKED);
+        card.block();
     }
 
     @Transactional
     public void depositToCard(Long cardId, BigDecimal amount) {
         var card = findCardByIdOrThrow(cardId);
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Deposit amount cannot be negative");
-        }
-        if (card.getStatus() != CardStatus.ACTIVE) {
-            throw new CardOperationException("Deposits can only be made to an active card");
-        }
-        var newBalance = card.getBalance().add(amount).setScale(2, RoundingMode.HALF_EVEN);
-        card.setBalance(newBalance);
+        card.deposit(amount);
     }
 
     @Transactional
     public void withdrawFromCard(Long cardId, BigDecimal amount) {
         var card = findCardByIdOrThrow(cardId);
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Withdrawal amount cannot be negative");
-        }
-        if (card.getStatus() != CardStatus.ACTIVE) {
-            throw new CardOperationException("Withdrawals can only be made from an active card");
-        }
-        if (amount.compareTo(card.getBalance()) > 0) {
-            throw new CardOperationException("Insufficient funds for withdrawal");
-        }
-        var newBalance = card.getBalance().subtract(amount).setScale(2, RoundingMode.HALF_EVEN);
-        card.setBalance(newBalance);
+        card.withdraw(amount);
     }
 
     @Transactional(readOnly = true)
