@@ -53,3 +53,10 @@ Testy akceptacyjne na najwyższym poziomie gwarantują bezpieczną refaktoryzacj
 ### 1. Separacja logiki biznesowej od procesowej
 - **Zadanie:** Uprość serwisy, przenosząc logikę biznesową tam, gdzie znajdują się dane. Obiekty domenowe powinny posiadać metody z jasno zdefiniowanymi intencjami, które zmieniają stan obiektu, a nie settery.
 - **Testy:** Pamiętaj o napisaniu jednostkowych testów dla logiki domenowej. Testy te powinny działać niezależnie od frameworka Spring.
+
+### 2. Value Objects
+- **Zadanie:** Zidentyfikuj kandydatów na Value Objects i stwórz je.
+- **Testy:** Nie zapomnij o testach jednostkowych dla nowo utworzonych Value Objects.
+
+Podczas refaktoryzacji kodu, testy na niższym poziomie, takie jak [PaymentCardTest](../../../../test/java/wzorce/oop/PaymentCardTest.java), mogą wymagać dostosowania do wprowadzonych zmian w strukturze kodu.
+Jednakże, testy akceptacyjne, jak [PaymentCardAcceptanceTest](../../../../test/java/wzorce/oop/PaymentCardAcceptanceTest.java), nie powinny ulegać zmianom, ale raczej zabezpieczać przed zmianą obserwowalnych zachowań aplikacji.
