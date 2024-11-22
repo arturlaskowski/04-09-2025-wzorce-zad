@@ -18,7 +18,8 @@ class RoomManagementTest {
         var date = LocalDate.of(2024, 7, 15);
 
         //when
-        RoomOffer roomOffer = null;
+        RoomManagement standardRoomManagement = new StandardRoomManagement();
+        RoomOffer roomOffer = standardRoomManagement.prepareRoom(roomName, roomSize, additionalInfo, date);
 
         //then
         assertThat(BigDecimal.valueOf(225)).isEqualTo(roomOffer.price());
@@ -33,7 +34,8 @@ class RoomManagementTest {
         var date = LocalDate.of(2024, 8, 5);
 
         //when
-        RoomOffer roomOffer = null;
+        RoomManagement suiteRoomManagement = new SuiteRoomManagement();
+        RoomOffer roomOffer = suiteRoomManagement.prepareRoom(roomName, roomSize, additionalInfo, date);
 
         //then
         assertThat(BigDecimal.valueOf(450)).isEqualTo(roomOffer.price());
