@@ -66,7 +66,7 @@ class PaymentCardService {
 
         var balanceAfterWithdraw = card.getBalance().subtract(moneyAmount);
 
-        int updatedRows = paymentCardRepository.updateBalanceWithOptimisticLock(cardId, balanceAfterWithdraw.amount());
+        int updatedRows = paymentCardRepository.updateBalanceWithOptimisticLock(cardId, balanceAfterWithdraw.amount(), card.getVersion());
         if (updatedRows == 0) {
             throw new OptimisticLockingFailureException("Failed to update card balance due to concurrent modification");
         }

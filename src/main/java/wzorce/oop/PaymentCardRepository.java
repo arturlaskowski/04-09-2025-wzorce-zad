@@ -11,6 +11,6 @@ interface PaymentCardRepository extends JpaRepository<PaymentCard, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE payment_card SET balance = ?2 WHERE id = ?1", nativeQuery = true)
-    int updateBalanceWithOptimisticLock(Long cardId, BigDecimal withdrawAmount);
+    @Query(value = "UPDATE payment_card SET balance = ?2, version = version +1 WHERE id = ?1 AND version=?3", nativeQuery = true)
+    int updateBalanceWithOptimisticLock(Long cardId, BigDecimal withdrawAmount, int currentVersion);
 }
