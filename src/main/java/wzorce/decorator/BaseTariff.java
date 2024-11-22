@@ -2,9 +2,7 @@ package wzorce.decorator;
 
 import java.math.BigDecimal;
 
-class BaseTariff {
-
-    static final String NAME_DELIMITER = " & ";
+class BaseTariff implements Tariff {
 
     protected String name;
     protected BigDecimal kmRate;
@@ -14,15 +12,13 @@ class BaseTariff {
         this.kmRate = kmRate;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public BigDecimal getKmRate() {
         return kmRate;
-    }
-
-    public BigDecimal calculateCost(int distance) {
-        return getKmRate().multiply(BigDecimal.valueOf(distance));
     }
 }

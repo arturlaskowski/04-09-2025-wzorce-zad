@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
+import static wzorce.decorator.TariffType.*;
+
 @Component
 class TariffFactory {
 
@@ -17,42 +19,24 @@ class TariffFactory {
         this.baseKmRate = new BigDecimal(baseKmRate);
     }
 
-    public BaseTariff createTariff(LocalDateTime time) {
-        boolean isFriday = false;
-        boolean happyHours = false;
-        boolean newYearsEve = false;
+    public Tariff createTariff(LocalDateTime time) {
+        Tariff tariff = new BaseTariff(STANDARD_NAME, baseKmRate);
 
         // Sprawdź czy piątek
         if (time.getDayOfWeek() == DayOfWeek.FRIDAY) {
-            isFriday = true;
+            tariff = new TariffDecorator(tariff, FRIDAY.getTariffName(), FRIDAY.getDiscountValue());
         }
 
         //  Sprawdź czy happy hours
         if (time.getHour() >= 14 && time.getHour() <= 16) {
-            happyHours = true;
+            tariff = new TariffDecorator(tariff, HAPPY_HOURS.getTariffName(), HAPPY_HOURS.getDiscountValue());
         }
 
         //  Sprawdź czy Sylwestery
         if (time.getMonthValue() == 12 && time.getDayOfMonth() == 31) {
-            newYearsEve = true;
+            tariff = new TariffDecorator(tariff, NEW_YEARS_EVE.getTariffName(), NEW_YEARS_EVE.getDiscountValue());
         }
 
-        if (isFriday && happyHours && newYearsEve) {
-            return new FridayHappyHoursNewYearsEveTariff(STANDARD_NAME, baseKmRate);
-        } else if (isFriday && newYearsEve) {
-            return new FridayNewYearsEveTariff(STANDARD_NAME, baseKmRate);
-        } else if (isFriday && happyHours) {
-            return new FridayHappyHoursTariff(STANDARD_NAME, baseKmRate);
-        } else if (happyHours && newYearsEve) {
-            return new HappyHoursNewYearsEveTariff(STANDARD_NAME, baseKmRate);
-        } else if (isFriday) {
-            return new FridayTariffTariff(STANDARD_NAME, baseKmRate);
-        } else if (happyHours) {
-            return new HappyHoursTariffTariff(STANDARD_NAME, baseKmRate);
-        } else if (newYearsEve) {
-            return new NewYearsEveTariffTariff(STANDARD_NAME, baseKmRate);
-        } else {
-            return new BaseTariff(STANDARD_NAME, baseKmRate);
-        }
+        return tariff;
     }
 }

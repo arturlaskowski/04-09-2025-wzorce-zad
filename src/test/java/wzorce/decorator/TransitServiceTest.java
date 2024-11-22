@@ -11,7 +11,7 @@ import java.time.Month;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wzorce.decorator.BaseTariff.NAME_DELIMITER;
+import static wzorce.decorator.TariffDecorator.NAME_DELIMITER;
 import static wzorce.decorator.TariffFactory.STANDARD_NAME;
 import static wzorce.decorator.TariffType.*;
 import static wzorce.decorator.TransitStatus.COMPLETED;
