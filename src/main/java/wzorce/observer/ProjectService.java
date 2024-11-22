@@ -1,22 +1,21 @@
 package wzorce.observer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final List<ProjectListener> projectListeners;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Long initProject(String projectName) {
         var project = new Project(projectName);
         var projectId = projectRepository.save(project).getId();
-        notifyProjectListeners(project);
+        sendProjectChangedEvent(project);
         return projectId;
     }
 
@@ -24,25 +23,25 @@ class ProjectService {
     public void startProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.start();
-        notifyProjectListeners(project);
+        sendProjectChangedEvent(project);
     }
 
     @Transactional
     public void suspendProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.suspend();
-        notifyProjectListeners(project);
+        sendProjectChangedEvent(project);
     }
 
     @Transactional
     public void completeProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.complete();
-        notifyProjectListeners(project);
+        sendProjectChangedEvent(project);
     }
 
-    private void notifyProjectListeners(Project project) {
-        projectListeners.forEach(projectListener ->
-                projectListener.update(new ProjectDto(project.getId(), project.getName(), project.getStatus())));
+    private void sendProjectChangedEvent(Project project) {
+        var projectChangedEvent = new ProjectChangedEvent(project.getId(), project.getName(), project.getStatus());
+        applicationEventPublisher.publishEvent(projectChangedEvent);
     }
 }

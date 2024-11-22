@@ -1,20 +1,21 @@
 package wzorce.observer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class FinanceManagementProjectListener implements ProjectListener {
+class FinanceManagementProjectListener {
 
     private final FinanceService financeService;
 
-    @Override
-    public void update(ProjectDto projectDto) {
-        switch (projectDto.status()) {
-            case PENDING -> financeService.allocateInitialBudget(projectDto.id());
-            case SUSPENDED -> financeService.freezeBudget(projectDto.id());
-            case COMPLETED -> financeService.finalizeProjectAccounts(projectDto.id());
+    @EventListener
+    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
+        switch (projectChangedEvent.status()) {
+            case PENDING -> financeService.allocateInitialBudget(projectChangedEvent.id());
+            case SUSPENDED -> financeService.freezeBudget(projectChangedEvent.id());
+            case COMPLETED -> financeService.finalizeProjectAccounts(projectChangedEvent.id());
         }
     }
 }

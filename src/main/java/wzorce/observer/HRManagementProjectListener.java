@@ -1,19 +1,20 @@
 package wzorce.observer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class HRManagementProjectListener implements ProjectListener {
+class HRManagementProjectListener {
 
     private final HRService hrService;
 
-    @Override
-    public void update(ProjectDto projectDto) {
-        switch (projectDto.status()) {
-            case PENDING -> hrService.assignProjectTeam(projectDto.id());
-            case COMPLETED -> hrService.reallocateResources(projectDto.id());
+    @EventListener
+    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
+        switch (projectChangedEvent.status()) {
+            case PENDING -> hrService.assignProjectTeam(projectChangedEvent.id());
+            case COMPLETED -> hrService.reallocateResources(projectChangedEvent.id());
         }
     }
 }

@@ -1,20 +1,21 @@
 package wzorce.observer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class ClientCommunicationProjectListener implements ProjectListener {
+class ClientCommunicationProjectListener {
 
     private final ClientService clientService;
 
-    @Override
-    public void update(ProjectDto projectDto) {
-        switch (projectDto.status()) {
-            case PENDING -> clientService.createClientCommunicationForProject(projectDto.id());
-            case IN_PROGRESS -> clientService.notifyClientOfProjectStart(projectDto.id());
-            case COMPLETED -> clientService.notifyClientOfProjectEnd(projectDto.id());
+    @EventListener
+    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
+        switch (projectChangedEvent.status()) {
+            case PENDING -> clientService.createClientCommunicationForProject(projectChangedEvent.id());
+            case IN_PROGRESS -> clientService.notifyClientOfProjectStart(projectChangedEvent.id());
+            case COMPLETED -> clientService.notifyClientOfProjectEnd(projectChangedEvent.id());
         }
     }
 }
