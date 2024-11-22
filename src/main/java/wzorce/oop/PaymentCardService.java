@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +13,7 @@ class PaymentCardService {
     private final PaymentCardRepository paymentCardRepository;
 
     public Long createPaymentCard(CreatePaymentCardDto dto) {
-        var initialBalanceRounded = dto.initialBalance().setScale(2, RoundingMode.HALF_EVEN);
-        var paymentCard = new PaymentCard(dto.cardNumber(), initialBalanceRounded);
+        var paymentCard = new PaymentCard(dto.cardNumber(), new Money(dto.initialBalance()));
         return paymentCardRepository.save(paymentCard).getId();
     }
 
@@ -34,20 +32,20 @@ class PaymentCardService {
     @Transactional
     public void depositToCard(Long cardId, BigDecimal amount) {
         var card = findCardByIdOrThrow(cardId);
-        card.deposit(amount);
+        card.deposit(new Money(amount));
     }
 
     @Transactional
     public void withdrawFromCard(Long cardId, BigDecimal amount) {
         var card = findCardByIdOrThrow(cardId);
-        card.withdraw(amount);
+        card.withdraw(new Money(amount));
     }
 
     @Transactional(readOnly = true)
     public PaymentCardDto getCardById(Long cardId) {
         var card = findCardByIdOrThrow(cardId);
         return new PaymentCardDto(card.getId(), card.getCardNumber(),
-                card.getBalance(), card.getStatus());
+                card.getBalance().amount(), card.getStatus());
     }
 
     private PaymentCard findCardByIdOrThrow(Long cardId) {

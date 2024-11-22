@@ -1,15 +1,9 @@
 package wzorce.oop;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,10 +14,11 @@ class PaymentCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String cardNumber;
-    private BigDecimal balance;
+    @AttributeOverride(name = "amount", column = @Column(name = "balance"))
+    private Money balance;
     private CardStatus status;
 
-    public PaymentCard(String cardNumber, BigDecimal initialBalance) {
+    public PaymentCard(String cardNumber, Money initialBalance) {
         this.cardNumber = cardNumber;
         this.balance = initialBalance;
         this.status = CardStatus.ACTIVE;
@@ -43,26 +38,20 @@ class PaymentCard {
         this.status = CardStatus.BLOCKED;
     }
 
-    public void deposit(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Deposit amount cannot be negative");
-        }
+    public void deposit(Money amount) {
         if (this.status != CardStatus.ACTIVE) {
             throw new CardOperationException("Deposits can only be made to an active card");
         }
-        this.balance = this.balance.add(amount).setScale(2, RoundingMode.HALF_EVEN);
+        this.balance = this.balance.add(amount);
     }
 
-    public void withdraw(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Withdrawal amount cannot be negative");
-        }
+    public void withdraw(Money amount) {
         if (this.status != CardStatus.ACTIVE) {
             throw new CardOperationException("Withdrawals can only be made from an active card");
         }
-        if (amount.compareTo(this.balance) > 0) {
+        if (!this.balance.isGreaterThanOrEqualTo(amount)) {
             throw new CardOperationException("Insufficient funds for withdrawal");
         }
-        this.balance = this.balance.subtract(amount).setScale(2, RoundingMode.HALF_EVEN);
+        this.balance = this.balance.subtract(amount);
     }
 }
