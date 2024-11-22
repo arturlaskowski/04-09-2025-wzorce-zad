@@ -1,6 +1,7 @@
 package wzorce.oop;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +52,23 @@ class PaymentCardService {
     private PaymentCard findCardByIdOrThrow(Long cardId) {
         return paymentCardRepository.findById(cardId)
                 .orElseThrow(() -> new CardNotFoundException(cardId));
+    }
+
+
+    // Metoda do przećwiczenia działania mechanizmu Optimistic Locking.
+    public void withdrawFromCardNativeSql(Long cardId, BigDecimal amount) {
+        var card = findCardByIdOrThrow(cardId);
+        var moneyAmount = new Money(amount);
+
+        if (!card.getBalance().isGreaterThanOrEqualTo(moneyAmount)) {
+            throw new CardOperationException("Insufficient funds for withdrawal");
+        }
+
+        var balanceAfterWithdraw = card.getBalance().subtract(moneyAmount);
+
+        int updatedRows = paymentCardRepository.updateBalanceWithOptimisticLock(cardId, balanceAfterWithdraw.amount());
+        if (updatedRows == 0) {
+            throw new OptimisticLockingFailureException("Failed to update card balance due to concurrent modification");
+        }
     }
 }

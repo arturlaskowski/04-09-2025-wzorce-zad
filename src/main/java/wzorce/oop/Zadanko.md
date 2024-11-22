@@ -60,3 +60,11 @@ Testy akceptacyjne na najwyższym poziomie gwarantują bezpieczną refaktoryzacj
 
 Podczas refaktoryzacji kodu, testy na niższym poziomie, takie jak [PaymentCardTest](../../../../test/java/wzorce/oop/PaymentCardTest.java), mogą wymagać dostosowania do wprowadzonych zmian w strukturze kodu.
 Jednakże, testy akceptacyjne, jak [PaymentCardAcceptanceTest](../../../../test/java/wzorce/oop/PaymentCardAcceptanceTest.java), nie powinny ulegać zmianom, ale raczej zabezpieczać przed zmianą obserwowalnych zachowań aplikacji.
+
+### 3.1. Optimistic Locking JPA
+- **Zadanie:** Zaimplementuj mechanizm **Optimistic Locking** za pomocą JPA.
+- **Testy:** Jeśli Ci się uda, testy [PaymentCardConcurrencyJpaTests](../../../../test/java/wzorce/oop/PaymentCardConcurrencyJpaTests.java) będą zielone.
+
+### 3.2. Optimistic Locking SQL
+- **Zadanie:** Zaimplementuj mechanizm **Optimistic Locking** za pomocą natywnego SQL (JDBC).
+- **Testy:** Jeśli Ci się uda, testy [PaymentCardConcurrencySqlTests](../../../../test/java/wzorce/oop/PaymentCardConcurrencySqlTests.java) będą zielone.
