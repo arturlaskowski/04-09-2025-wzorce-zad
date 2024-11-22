@@ -6,28 +6,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class Box {
+class Box implements PackageComponent {
 
-    private final List<Product> products = new ArrayList<>();
+    private final List<PackageComponent> packageComponents = new ArrayList<>();
 
-    public Box(Product... products) {
-        this.products.addAll(Arrays.asList(products));
+    public Box(PackageComponent... packageComponents) {
+        this.packageComponents.addAll(Arrays.asList(packageComponents));
     }
 
+    @Override
     public BigDecimal calculatePrice() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (Product product : products) {
-            total = total.add(product.getPrice());
-        }
-        return total;
+        return packageComponents.stream()
+                .map(PackageComponent::calculatePrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
     public int calculateWeight() {
-        int totalWeight = 0;
-        for (Product product : products) {
-            totalWeight += product.getWeight();
-        }
-        return totalWeight;
+        return packageComponents.stream()
+                .mapToInt(PackageComponent::calculateWeight)
+                .sum();
     }
 }
 
