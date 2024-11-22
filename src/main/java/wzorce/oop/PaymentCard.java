@@ -18,6 +18,9 @@ class PaymentCard {
     private Money balance;
     private CardStatus status;
 
+    @Version
+    private int version;
+
     public PaymentCard(String cardNumber, Money initialBalance) {
         this.cardNumber = cardNumber;
         this.balance = initialBalance;
