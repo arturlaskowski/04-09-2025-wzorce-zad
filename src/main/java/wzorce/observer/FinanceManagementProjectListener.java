@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class FinanceManagmentProjectListener implements ProjectListener {
+class FinanceManagementProjectListener implements ProjectListener {
 
     private final FinanceService financeService;
 

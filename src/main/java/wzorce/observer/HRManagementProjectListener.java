@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class HrManagmentProjectListener implements ProjectListener {
+class HRManagementProjectListener implements ProjectListener {
 
     private final HRService hrService;
 

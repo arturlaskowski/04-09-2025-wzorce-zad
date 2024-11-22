@@ -1,6 +1,7 @@
 package wzorce.observer;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,19 @@ class ProjectServiceTest {
                 .orShould().dependOnClassesThat().areAssignableTo(HRService.class)
                 .because("Jeśli zastosujemy wzorzec Obserwator, nie będziemy mieli bezpośredniej zależności między obiektami ProjectService," +
                         " a klasami nasłuchującymi zmian w tych obiektach.");
+
+        rule.check(importedClasses);
+    }
+
+    @Test
+    void projectServiceShouldBeIndependentOfListeners() {
+        var importedClasses = new ClassFileImporter().importPackages("wzorce.observer");
+
+        var rule = ArchRuleDefinition.noClasses()
+                .that().areAssignableTo(ProjectService.class)
+                .should().dependOnClassesThat().haveSimpleNameEndingWith("Listener")
+                .because("Jeśli zastosujemy podejście Publish-Subscribe, nie będziemy mieli bezpośredniej zależności" +
+                        " między obiektami ProjectService a listenerami, które nasłuchują na jego zmiany");
 
         rule.check(importedClasses);
     }
