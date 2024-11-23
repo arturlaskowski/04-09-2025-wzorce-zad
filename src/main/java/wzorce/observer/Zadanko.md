@@ -34,3 +34,15 @@ Zaimplementuj to, wykorzystując mechanizm `ApplicationEventPublisher` i `@Event
 ### Warunki akceptacji
 Jeśli zaimplementujesz to zadanie prawidłowo, testy będą zielone:
 - [ProjectServiceTest](../../../../test/java/wzorce/observer/ProjectServiceTest.java)
+
+## Zadanie 3
+
+Aktualna implementacja działa w taki sposób, że nawet jeśli subskrybent jest zainteresowany tylko jednym typem zdarzenia, np. zakończeniem projektu,
+to i tak musi nasłuchiwać wszystkie zdarzenia. 
+Następnie, po swojej stronie, musi sprawdzać każde zdarzenie i odrzucać te, które nie są związane z zakończeniem projektu. 
+Proszę zmienić to podejście i zastosować wzorzec Domain Event, w którym będzie większa granulacja zdarzeń. 
+Dzięki temu subskrybenci będą mogli nasłuchiwać konkretnych zmian z domeny projektu, które ich interesują.
+
+### Warunki akceptacji
+Zachowanie aplikacji nie powinno ulec zmianie, dlatego testy powinny nadal przechodzić pomyślnie:
+- [ProjectServiceTest](../../../../test/java/wzorce/observer/ProjectServiceTest.java)
