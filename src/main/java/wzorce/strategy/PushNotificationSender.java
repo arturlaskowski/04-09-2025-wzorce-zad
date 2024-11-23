@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-class PushNotificationSender {
+class PushNotificationSender implements NotificationSender {
 
     public void configureAPNS(String certificatePath, String certificatePassword) {
         log.info("Konfiguruje Apple Push Notification Service dla urządzeń iOS");
@@ -19,5 +19,10 @@ class PushNotificationSender {
 
     public void sendNotification(Notification notification) {
         log.info("Wysyłam notyfikacje push");
+    }
+
+    @Override
+    public NotificationChannel notificationChannel() {
+        return NotificationChannel.PUSH_NOTIFICATION;
     }
 }

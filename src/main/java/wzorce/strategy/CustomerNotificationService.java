@@ -9,9 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 class CustomerNotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final EmailNotificationSender emailNotificationSender;
-    private final SmsNotificationSender smsNotificationSender;
-    private final PushNotificationSender pushNotificationSender;
+    private final NotificationSenderFactory notificationSenderFactory;
 
     public void scheduleNotification(Customer customer) {
         var notification = Notification.builder()
@@ -29,13 +27,8 @@ class CustomerNotificationService {
         var notification = notificationRepository.findByIdAndStatus(notificationId, NotificationStatus.PENDING).orElseThrow(() ->
                 new NotificationSendException("Notification with ID " + notificationId + " is not pending and cannot be sent."));
 
-        if (NotificationChannel.EMAIL == notification.getChannel()) {
-            emailNotificationSender.sendNotification(notification);
-        } else if (NotificationChannel.SMS == notification.getChannel()) {
-            smsNotificationSender.sendNotification(notification);
-        } else if (NotificationChannel.PUSH_NOTIFICATION == notification.getChannel()) {
-            pushNotificationSender.sendNotification(notification);
-        }
+        var notificationSender = notificationSenderFactory.getNotificationSender(notification.getChannel());
+        notificationSender.sendNotification(notification);
 
         notification.send();
     }
