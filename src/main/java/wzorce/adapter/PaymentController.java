@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 class PaymentController {
 
-    private final NewPaymentService newPaymentService;
+    private final PaymentProcessor paymentProcessor;
 
     @PostMapping("/payments")
     void makePayment(@RequestBody @Valid NewSystemPaymentDto newSystemPaymentDto) {
-        newPaymentService.processPayment(newSystemPaymentDto);
+        paymentProcessor.processPayment(newSystemPaymentDto);
     }
 }
