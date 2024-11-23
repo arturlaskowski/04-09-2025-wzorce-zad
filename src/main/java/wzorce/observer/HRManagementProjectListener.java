@@ -11,10 +11,12 @@ class HRManagementProjectListener {
     private final HRService hrService;
 
     @EventListener
-    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
-        switch (projectChangedEvent.status()) {
-            case PENDING -> hrService.assignProjectTeam(projectChangedEvent.id());
-            case COMPLETED -> hrService.reallocateResources(projectChangedEvent.id());
-        }
+    public void handleEvent(ProjectInitializedEvent projectInitializedEvent) {
+        hrService.assignProjectTeam(projectInitializedEvent.projectId());
+    }
+
+    @EventListener
+    public void handleEvent(ProjectCompletedEvent projectCompletedEvent) {
+        hrService.reallocateResources(projectCompletedEvent.projectId());
     }
 }

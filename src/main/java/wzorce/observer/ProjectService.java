@@ -15,7 +15,7 @@ class ProjectService {
     public Long initProject(String projectName) {
         var project = new Project(projectName);
         var projectId = projectRepository.save(project).getId();
-        sendProjectChangedEvent(project);
+        applicationEventPublisher.publishEvent(new ProjectInitializedEvent(projectId, projectName));
         return projectId;
     }
 
@@ -23,25 +23,20 @@ class ProjectService {
     public void startProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.start();
-        sendProjectChangedEvent(project);
+        applicationEventPublisher.publishEvent(new ProjectStartedEvent(projectId));
     }
 
     @Transactional
     public void suspendProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.suspend();
-        sendProjectChangedEvent(project);
+        applicationEventPublisher.publishEvent(new ProjectSuspendedEvent(projectId));
     }
 
     @Transactional
     public void completeProject(Long projectId) {
         var project = projectRepository.findById(projectId).orElseThrow();
         project.complete();
-        sendProjectChangedEvent(project);
-    }
-
-    private void sendProjectChangedEvent(Project project) {
-        var projectChangedEvent = new ProjectChangedEvent(project.getId(), project.getName(), project.getStatus());
-        applicationEventPublisher.publishEvent(projectChangedEvent);
+        applicationEventPublisher.publishEvent(new ProjectCompletedEvent(projectId));
     }
 }

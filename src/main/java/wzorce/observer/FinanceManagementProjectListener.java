@@ -11,11 +11,17 @@ class FinanceManagementProjectListener {
     private final FinanceService financeService;
 
     @EventListener
-    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
-        switch (projectChangedEvent.status()) {
-            case PENDING -> financeService.allocateInitialBudget(projectChangedEvent.id());
-            case SUSPENDED -> financeService.freezeBudget(projectChangedEvent.id());
-            case COMPLETED -> financeService.finalizeProjectAccounts(projectChangedEvent.id());
-        }
+    public void handleEvent(ProjectInitializedEvent projectInitializedEvent) {
+        financeService.allocateInitialBudget(projectInitializedEvent.projectId());
+    }
+
+    @EventListener
+    public void handleEvent(ProjectSuspendedEvent projectSuspendedEvent) {
+        financeService.freezeBudget(projectSuspendedEvent.projectId());
+    }
+
+    @EventListener
+    public void handleEvent(ProjectCompletedEvent projectCompletedEvent) {
+        financeService.finalizeProjectAccounts(projectCompletedEvent.projectId());
     }
 }

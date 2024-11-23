@@ -11,11 +11,17 @@ class ClientCommunicationProjectListener {
     private final ClientService clientService;
 
     @EventListener
-    public void handleEvent(ProjectChangedEvent projectChangedEvent) {
-        switch (projectChangedEvent.status()) {
-            case PENDING -> clientService.createClientCommunicationForProject(projectChangedEvent.id());
-            case IN_PROGRESS -> clientService.notifyClientOfProjectStart(projectChangedEvent.id());
-            case COMPLETED -> clientService.notifyClientOfProjectEnd(projectChangedEvent.id());
-        }
+    public void handleEvent(ProjectInitializedEvent projectInitializedEvent) {
+        clientService.createClientCommunicationForProject(projectInitializedEvent.projectId());
+    }
+
+    @EventListener
+    public void handleEvent(ProjectStartedEvent projectStartedEvent) {
+        clientService.notifyClientOfProjectStart(projectStartedEvent.projectId());
+    }
+
+    @EventListener
+    public void handleEvent(ProjectCompletedEvent projectCompletedEvent) {
+        clientService.notifyClientOfProjectEnd(projectCompletedEvent.projectId());
     }
 }
