@@ -8,7 +8,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
-import wzorce.cqrs.application.query.CouponDetailsDto;
+import wzorce.cqrs.application.dto.CouponDetailsDto;
+import wzorce.cqrs.application.dto.CreateCouponDto;
 import wzorce.cqrs.domain.CouponStatus;
 import wzorce.cqrs.domain.NominalValue;
 

@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/coupons")
 @AllArgsConstructor
-public class CouponController {
+class CouponController {
 
     private final CouponService couponService;
 
