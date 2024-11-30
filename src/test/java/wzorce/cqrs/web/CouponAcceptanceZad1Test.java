@@ -1,7 +1,6 @@
-package wzorce.cqrs;
+package wzorce.cqrs.web;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,14 +8,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
-import wzorce.cqrs.application.dto.CouponDetailsDto;
-import wzorce.cqrs.application.dto.CreateCouponDto;
+import wzorce.cqrs.application.query.CouponDetailsDto;
 import wzorce.cqrs.domain.CouponStatus;
 import wzorce.cqrs.domain.NominalValue;
-import wzorce.cqrs.web.CouponController;
 
 import java.util.UUID;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,8 +38,11 @@ class CouponAcceptanceZad1Test {
         assertThat(creatResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(creatResponse.getHeaders().getLocation()).isNotNull();
 
+        var couponId = UUID.fromString(UriComponentsBuilder.fromUri(creatResponse.getHeaders().getLocation()).build()
+                .getPathSegments().getLast());
+
         // get after created
-        var getResponse = restTemplate.getForEntity(creatResponse.getHeaders().getLocation(), CouponDetailsDto.class);
+        var getResponse = restTemplate.getForEntity(getBaseCouponsUrl() + "/" + couponId, CouponDetailsDto.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getResponse.getBody())
                 .isNotNull()
@@ -51,8 +52,6 @@ class CouponAcceptanceZad1Test {
                 .extracting("id").isNotNull();
 
         //use - coupon
-        var couponId = UUID.fromString(UriComponentsBuilder.fromUri(creatResponse.getHeaders().getLocation()).build()
-                .getPathSegments().getLast());
         // when
         var useResponse = restTemplate.postForEntity(getBaseCouponsUrl() + "/" + couponId + "/use",
                 createCouponDto, Void.class);
@@ -69,6 +68,20 @@ class CouponAcceptanceZad1Test {
                 .hasFieldOrPropertyWithValue("nominalValue", createCouponDto.nominalValue())
                 .hasFieldOrPropertyWithValue("status", CouponStatus.USED)
                 .extracting("id").isNotNull();
+
+        //deactivate - coupon
+        // when
+        var deactivatedResponse = restTemplate.postForEntity(getBaseCouponsUrl() + "/" + couponId + "/deactivate",
+                createCouponDto, ApiError.class);
+
+        //then
+        assertThat(deactivatedResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(deactivatedResponse.getBody())
+                .isNotNull()
+                .hasNoNullFieldsOrProperties()
+                .extracting("message")
+                .asString()
+                .contains("Coupon " + couponId + " must be active to perform this operation");
     }
 
     String getBaseCouponsUrl() {
@@ -76,14 +89,14 @@ class CouponAcceptanceZad1Test {
     }
 
     @Test
-    void controllerShouldBeIndependentOfService() {
-        var importedClasses = new ClassFileImporter().importPackages("wzorce.observer");
+    void couponControllerShouldBeIndependentOfCouponService() {
+        var importedClasses = new ClassFileImporter().importPackages("wzorce.cqrs");
 
-        var rule = ArchRuleDefinition.noClasses()
+        var rule = noClasses()
                 .that().areAssignableTo(CouponController.class)
-                .should().dependOnClassesThat().haveSimpleNameEndingWith("Service")
+                .should().dependOnClassesThat().haveSimpleNameEndingWith("CouponService")
                 .because("Jeśli zastosujemy wzorzec Mediator, " +
-                        "nie będzie bezpośredniej zależności między kontrolerem a serwisem.");
+                        "nie będzie bezpośredniej zależności między CouponController a CouponService.");
 
         rule.check(importedClasses);
     }
