@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "5057cf72-4836-4004-b02d-f6dd29eac3ec",
+		"name": "Coupon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5840429"
+	},
+	"item": [
+		{
+			"name": "createCoupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseHeader = pm.response.headers.get('Location');",
+							"if (responseHeader) {",
+							"    var couponId = responseHeader.split('/').pop();",
+							"    pm.environment.set(\"lastCreatedCouponId\", couponId);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nominalValue\": \"TEN\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/coupons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coupons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCouponById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/coupons/:couponId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coupons",
+						":couponId"
+					],
+					"variable": [
+						{
+							"key": "couponId",
+							"value": "{{lastCreatedCouponId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "useCoupon",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/coupons/:couponId/use",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coupons",
+						":couponId",
+						"use"
+					],
+					"variable": [
+						{
+							"key": "couponId",
+							"value": "{{lastCreatedCouponId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deactivateCoupon",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/coupons/:couponId/deactivate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coupons",
+						":couponId",
+						"deactivate"
+					],
+					"variable": [
+						{
+							"key": "couponId",
+							"value": "{{lastCreatedCouponId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
