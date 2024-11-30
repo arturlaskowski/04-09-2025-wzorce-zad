@@ -1,4 +1,4 @@
-package wzorce.cqrs.application;
+package wzorce.cqrs.application.command;
 
 import org.springframework.data.repository.CrudRepository;
 import wzorce.cqrs.domain.Coupon;

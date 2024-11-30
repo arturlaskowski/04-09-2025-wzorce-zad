@@ -21,8 +21,8 @@ public class Coupon {
     @Version
     private int version;
 
-    public Coupon(NominalValue nominalValue) {
-        this.id = CouponId.newOne();
+    public Coupon(CouponId couponId, NominalValue nominalValue) {
+        this.id = couponId;
         this.status = CouponStatus.ACTIVE;
         this.nominalValue = nominalValue;
     }

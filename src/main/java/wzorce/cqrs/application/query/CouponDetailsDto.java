@@ -1,4 +1,4 @@
-package wzorce.cqrs.application.dto;
+package wzorce.cqrs.application.query;
 
 
 import wzorce.cqrs.domain.CouponStatus;
