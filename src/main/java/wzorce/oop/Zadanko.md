@@ -21,7 +21,7 @@ Aplikacja jest już po Proof of Concept (PoC) i przyjęła się dobrze, teraz na
 - **Parametry:** `cardId`
 
 ### Wpłata na Kartę
-- **Endpoint:** `POST /payment-cards/{cardId}/deposit`
+- **Endpoint:** `POST /payment-cards/{cardId}/deposit`k
 - **Opis:** Dokonuje wpłaty na kartę o podanym ID.
 - **Parametry:** `cardId`
 - **Dane:** `{"amount": "kwota"}`
@@ -50,8 +50,8 @@ Testy akceptacyjne na najwyższym poziomie gwarantują bezpieczną refaktoryzacj
 
 ## Wytyczne Refaktoryzacji
 
-### 1. Separacja logiki biznesowej od procesowej
-- **Zadanie:** Uprość serwisy, przenosząc logikę biznesową tam, gdzie znajdują się dane. Obiekty domenowe powinny posiadać metody z jasno zdefiniowanymi intencjami, które zmieniają stan obiektu, a nie settery.
+### 1. Separacja logiki domenowej od procesowej
+- **Zadanie:** Uprość serwisy, przenosząc logikę domenową tam, gdzie znajdują się dane. Obiekty domenowe powinny posiadać metody z jasno zdefiniowanymi intencjami, które zmieniają stan obiektu, a nie settery.
 - **Testy:** Pamiętaj o napisaniu jednostkowych testów dla logiki domenowej. Testy te powinny działać niezależnie od frameworka Spring.
 
 ### 2. Value Objects
