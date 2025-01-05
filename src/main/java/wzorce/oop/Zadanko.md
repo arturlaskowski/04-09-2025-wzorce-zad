@@ -50,6 +50,6 @@ Testy akceptacyjne na najwyższym poziomie gwarantują bezpieczną refaktoryzacj
 
 ## Wytyczne Refaktoryzacji
 
-### 1. Separacja logiki biznesowej od procesowej
+### 1. Separacja logiki domenowej od procesowej
 - **Zadanie:** Uprość serwisy, przenosząc logikę domenową tam, gdzie znajdują się dane. Obiekty domenowe powinny posiadać metody z jasno zdefiniowanymi intencjami, które zmieniają stan obiektu, a nie settery.
 - **Testy:** Pamiętaj o napisaniu jednostkowych testów dla logiki domenowej. Testy te powinny działać niezależnie od frameworka Spring.
