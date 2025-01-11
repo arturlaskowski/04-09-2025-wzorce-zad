@@ -1,4 +1,4 @@
-package wzorce.cqrs.web;
+package wzorce.cqrs;
 
 import org.springframework.http.HttpStatus;
 

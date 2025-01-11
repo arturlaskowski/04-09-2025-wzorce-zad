@@ -29,7 +29,7 @@ Jeśli jednak wolisz testować za pomocą Postmana, tu jest kolekcja do zaimport
 ## Zad 1
 
 Zaimplementuj wzorzec architektoniczny CQRS, wykorzystując wzorzec Mediator, tak aby
-[CouponController](web/CouponController.java) tworzył komendy (command) i wysyłał je do mediatora. 
+[CouponController](CouponController.java) tworzył komendy (command) i wysyłał je do mediatora. 
 Mediator ma za zadanie delegować te komendy do odpowiednich command handlerów. 
 Przykład implementacji znajdziesz w projekcie `wzorce` na branchu `cqrs-command-handler`.
 

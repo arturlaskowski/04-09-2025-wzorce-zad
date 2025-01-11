@@ -1,4 +1,4 @@
-package wzorce.cqrs.web;
+package wzorce.cqrs;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
