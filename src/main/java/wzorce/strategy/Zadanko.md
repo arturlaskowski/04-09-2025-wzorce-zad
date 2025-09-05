@@ -23,4 +23,4 @@ Implementacja będzie uznana za prawidłową, jeśli test będą zielone:
 
 ### Info
 Oto jak wygląda podstawowa relacja między klasami dla wzorca Strategia:
-![Idea wzorca dekorator](../../../../../src/main/resources/static/strategy/strategy_idea.png)
+![Idea wzorca strategia](../../../../../src/main/resources/static/strategy/strategy_idea.png)
